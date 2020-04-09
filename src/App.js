@@ -3,46 +3,30 @@ import './App.css';
 import TodoListHeader from "./TodoListHeader";
 import TodoListFooter from "./TodoListFooter";
 import TodoListTasks from "./TodoListTasks";
+import TodoListTask from "./ToDoListTask";
 
 class App extends React.Component {
+    tasksItems = [
+        {title: "CSS", isDone: true, priority: "low"},
+        {title: "JS", isDone: false, priority: "high"},
+        {title: "Pattern", isDone: false, priority: "medium"},
+        {title: "ReactJS", isDone: true, priority: "low"},
+        {title: "CSS", isDone: false, priority: "high"}
+    ];
+
+    filterValue = "All";
     render = () => {
+
         return (
             <div className="App">
+
                 <div className="todoList">
-                    <TodoListHeader />
-                    {/*    <div className="todoList-header">*/}
-                    {/*        <h3 className="todoList-header__title">What to Learn</h3>*/}
-                    {/*        <div className="todoList-newTaskForm">*/}
-                    {/*            <input type="text" placeholder="New task name"/>*/}
-                    {/*            <button>Add</button>*/}
-                    {/*        </div>*/}
-                    {/*    </div>*/}
-                    <TodoListTasks />
-                    {/*<div className="todoList-tasks">*/}
-                    {/*    <div className="todoList-task">*/}
-                    {/*        <input type="checkbox" checked={true}/>*/}
-                    {/*        <span>CSS</span>*/}
-                    {/*    </div>*/}
-                    {/*    <div className="todoList-task">*/}
-                    {/*        <input type="checkbox" checked={false}/>*/}
-                    {/*        <span>JS</span>*/}
-                    {/*    </div>*/}
-                    {/*    <div className="todoList-task">*/}
-                    {/*        <input type="checkbox" checked={false}/>*/}
-                    {/*        <span>ReactJS</span>*/}
-                    {/*    </div>*/}
-                    {/*    <div className="todoList-task">*/}
-                    {/*        <input type="checkbox" checked={true}/>*/}
-                    {/*        <span>Patterns</span>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-                    <TodoListFooter />
-                    {/*<div className="todoList-footer">*/}
-                        {/*<button>All</button>*/}
-                        {/*<button>Completed</button>*/}
-                        {/*<button>Active</button>*/}
-                    </div>
+                    <TodoListHeader/>
+                    <TodoListTasks tasks={this.tasksItems}/>
+                    <TodoListFooter filerValue={this.filterValue}/>
+
                 </div>
+            </div>
 
         );
     }
