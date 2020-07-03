@@ -10,11 +10,15 @@ class TodoListHeader extends React.Component {
     state = {
         error: false,
         title: ""
-    }
+    };
     onAddTaskClick = () => {
         // let newTitle = this.newTasksTitleRef.current.value = "";
+//потому что теперь мы текст берем из title, кторый в state. А туда он залетает благодаря функции
+//onTitleChanged, которая в свою очредь берет ее из value
         let newTitle = this.state.title.trim();
-        if (newTitle === "") {
+ //и вот здесь мы ставим условие, что если у нас в newTitle придет пустая строка,то мы
+ //не добавляем ничего в tasks(запрещаем добавление новой таски по клику мыши)
+        if (newTitle.trim() === "") {
             this.setState({error: true})
         } else {
             // this.newTasksTitleRef.current.value = "";
@@ -24,8 +28,7 @@ class TodoListHeader extends React.Component {
                 title: ""
             })
         }
-        ;
-    }
+       };
     onTitleChanged = (e) => {
         this.setState({
             error: false,
@@ -42,7 +45,7 @@ class TodoListHeader extends React.Component {
         let errorClass = this.state.error ? "error" : "";
         return (
             <div className="todoList-header">
-                <h3 className="todoList-header__title">What to Learn</h3>
+                <h3 className="todoList-header__title">{this.props.title}</h3>
                 <div className="todoList-newTaskForm">
                     <input
                         className={errorClass}

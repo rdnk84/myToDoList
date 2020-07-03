@@ -2,8 +2,7 @@
 
 # dependencies
 /node_modules
-/.
-pnp
+/.pnp
 .pnp.js
 
 # testing
@@ -13,8 +12,6 @@ pnp
 /build
 
 # misc
-
-
 .DS_Store
 .env.local
 .env.development.local
@@ -24,10 +21,3 @@ pnp
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-
-# Ignore installed nodejs modules folder and package-lock.json
-node_modules/
-package-lock.json
-
-.idea/*

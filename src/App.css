@@ -1,10 +1,10 @@
 .App {
-
+  display: flex;
+  flex-direction: row;
 }
 
 .todoList {
-  width: 500px;
-  margin: 0 auto;
+  width: 300px;
 }
 
 .todoList > div {
@@ -14,17 +14,15 @@
 .todoList-task {
 
 }
-.filter-active {
-  background-color: blue;
-}
-
-
 
 .todoList-task.done {
   opacity: 0.5;
 }
 
+.filter-active {
+  background-color: blue;
+}
 
 .error {
-  border: 1px solid red;
+  border-color: red;
 }

@@ -1,92 +1,88 @@
 import React from 'react';
 import './App.css';
-import TodoListHeader from "./TodoListHeader";
-import TodoListFooter from "./TodoListFooter";
-import TodoListTasks from "./TodoListTasks";
+import TodoList from "./TodoList";
+import AddNewItemForm from "./AddNewItemForm";
+import {connect} from "react-redux";
+import reducer, {addTodoListTC, setTodolistsTC} from "./reducers";
 
 class App extends React.Component {
 
-    state = {
-        tasksItems: [
-            {title: "CSS", isDone: true, priority: "low"},
-            {title: "JS", isDone: false, priority: "high"},
-            {title: "Pattern", isDone: false, priority: "medium"},
-            {title: "ReactJS", isDone: true, priority: "low"},
-            {title: "CSS", isDone: false, priority: "high"},
-        ],
-        filterValue: "All"
-    };
-    addTask = (newTitle) => {
-        let newTask = {
-            title: newTitle,
-            isDone: false,
-            priority: "low"
-        };
-        let newTasks = [...this.state.tasksItems, newTask];
-        this.setState({tasksItems: newTasks});
-        // this.newTaskTitleRef.current.value = "";
-    };
-    changeFilter = (newFilterValue) => {
-        this.setState({filterValue: newFilterValue});
-    };
-    changeStatus = (task, isDone) => {
-        let newTasks = this.state.tasksItems.map(t => {
-   //в записи t === task t-это таск из State, а task-это task, которая пришла из
-   //таски, по которой кликнули, и тогда в UI отображается ее новая отрисовка(в данном случае галочка)
-            if (t === task) {
-                return {...t, isDone: isDone}
-            }
-            return t;
-        });
-        this.setState({tasksItems: newTasks})
-    };
+    componentDidMount() {
+        this.restoreState();
+    }
 
-    //или вот это то же самое
-    //             case "Active":
-//     return t.isDone === false
-//     break;
-// case "Completed":
-//     return t.isDone === true
-//     break;
-// default:
-//     return true;
-//
+    restoreState = () => {
+        this.props.setTodolistsTC()
+//         api.getTodolists()
+// //т.е как только получаем ответ с сервера-мы диспатчим этот колбэк в Store и в Сторе появляются массив ToDolists
+//             .then(res => {
+//                 this.props.setTodolists(res)
+// //здесь в then приходит только res потому что в api в res сидит res.data
+//             });
+    }
+
+    addTodoList = (title) => {
+        this.props.addTodoListTC(title)
+//         api.createTodolist(title)
+//             //title в этом методе createTodolist(title) - это объект (body), кот.пришел из объекта api
+//             //согласно документации
+//             .then(res => {
+//                 let todolist = res.data.item;
+// //а раньше в then было res.data.data.item// Но сейчас,когда у нас res.data в then в файле api мы здесь один data убрали
+//                 this.props.addTodolist(todolist)
+//             });
+//         // let newTodoList = {
+//         //     id: this.nextTodoListId,
+//         //     title: title,
+//         //     tasks: []
+//         // }
+//         // this.props.addTodolist(newTodoList);
+    }
+
     render = () => {
-        let filteredTasks = this.state.tasksItems.filter(t => {
-            switch (this.state.filterValue) {
-                case "All":
-                    return true;
-                case "Completed":
-                    return t.isDone;
-                case "Active":
-                    return !t.isDone;
-                default:
-                    return true;
-            }
-        });
-        return (
-            <div className="App">
-                <div className="todoList">
-                    {/*    <div className="todoList-header">*/}
-                    {/*        <h3 className="todoList-header__title">What to Learn</h3>*/}
-                    {/*        <div className="todoList-newTaskForm">*/}
-                    {/*            <input ref={this.newTaskTitleRef} type="text" placeholder="New task name"/>*/}
-                    {/*            <button onClick={this.onAddTaskClick}>Add</button>*/}
-                    {/*        </div>*/}
-                    {/*    </div>*/}
-                    <TodoListHeader addTask={this.addTask}/>
-                    <TodoListTasks tasks={filteredTasks}
-                                   changeStatus={this.changeStatus}/>
-                    <TodoListFooter
-                        filterValue={this.state.filterValue}
-                        changeFilter={this.changeFilter}
-                    />
-                </div>
-            </div>
-        )
-    };
-}
-    
+        const todolists = this.props.todolists.map(tl => <TodoList
+            id={tl.id} title={tl.title} tasks={tl.tasks}/>)
 
-  export default App;
+        return (
+            <>
+                <div>
+                    <AddNewItemForm addItem={this.addTodoList}/>
+                </div>
+                <div className="App">
+                    {todolists}
+                </div>
+            </>
+        );
+    }
+}
+
+const mapStateToProps = (state) => {
+    return {todolists: state.reducer.todolists}
+}
+
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         getTodoLists: (todolists) => {
+//             const thunk = setTodolistsTC(todolists)
+//             dispatch(thunk)
+//         },
+// //а раньше было так
+// //         setTodolists: (todolists) => {
+// //             const action = setTodolistsAC(todolists)
+// //             dispatch(action)
+// //         }
+//         addTodolistTC: (newTodolist) => {
+//             const action = addTodolistAC(newTodolist)
+//             dispatch(action)
+// //или можно в одну строку dispatch(addTodolistAC(newTodolist))
+//         },
+//
+//     }
+//
+// }
+
+
+const ConnectedApp = connect(mapStateToProps, {setTodolistsTC, addTodoListTC})(App);
+//вместо mapDispatchToProps мы будем ставить в {} название thunkCreator, который мы импортируем из файла reducers
+export default ConnectedApp;
 
