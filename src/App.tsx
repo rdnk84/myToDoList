@@ -1,11 +1,24 @@
 import React from 'react';
 import './App.css';
-import TodoList from "./TodoList";
+import TodoList from "./ToDoList";
 import AddNewItemForm from "./AddNewItemForm";
 import {connect} from "react-redux";
-import reducer, {addTodoListTC, setTodolistsTC} from "./reducers";
+import reducer, {addTodoListTC, setTodolistsTC} from "./reducer";
+import {AppStateType} from "./store";
+import {TodoType} from "./types/entities";
 
-class App extends React.Component {
+type MapStatePropsType = {
+    todolists: Array<TodoType>
+}
+
+type MapDispatchPropsType = {
+    setTodolistsTC: () => void
+    addTodoListTC: (title: string) => void
+}
+
+type PropsType = MapStatePropsType & MapDispatchPropsType;
+
+class App extends React.Component<PropsType> {
 
     componentDidMount() {
         this.restoreState();
@@ -13,30 +26,10 @@ class App extends React.Component {
 
     restoreState = () => {
         this.props.setTodolistsTC()
-//         api.getTodolists()
-// //т.е как только получаем ответ с сервера-мы диспатчим этот колбэк в Store и в Сторе появляются массив ToDolists
-//             .then(res => {
-//                 this.props.setTodolists(res)
-// //здесь в then приходит только res потому что в api в res сидит res.data
-//             });
     }
 
-    addTodoList = (title) => {
+    addTodoList = (title:string) => {
         this.props.addTodoListTC(title)
-//         api.createTodolist(title)
-//             //title в этом методе createTodolist(title) - это объект (body), кот.пришел из объекта api
-//             //согласно документации
-//             .then(res => {
-//                 let todolist = res.data.item;
-// //а раньше в then было res.data.data.item// Но сейчас,когда у нас res.data в then в файле api мы здесь один data убрали
-//                 this.props.addTodolist(todolist)
-//             });
-//         // let newTodoList = {
-//         //     id: this.nextTodoListId,
-//         //     title: title,
-//         //     tasks: []
-//         // }
-//         // this.props.addTodolist(newTodoList);
     }
 
     render = () => {
@@ -56,7 +49,7 @@ class App extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: AppStateType) => {
     return {todolists: state.reducer.todolists}
 }
 
@@ -82,7 +75,7 @@ const mapStateToProps = (state) => {
 // }
 
 
-const ConnectedApp = connect(mapStateToProps, {setTodolistsTC, addTodoListTC})(App);
+const ConnectedApp = connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {setTodolistsTC, addTodoListTC})(App);
 //вместо mapDispatchToProps мы будем ставить в {} название thunkCreator, который мы импортируем из файла reducers
 export default ConnectedApp;
 

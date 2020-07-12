@@ -1,33 +1,43 @@
-import React from 'react';
+import React, {ChangeEvent, KeyboardEvent} from 'react';
 import './App.css';
 
-class AddNewItemForm extends React.Component {
-    state = {
+type OwnPropsType = {
+    addItem: (newText: string) => void
+}
+
+type StateType = {
+    error: boolean
+    title: string
+}
+
+class AddNewItemForm extends React.Component <OwnPropsType, StateType>{
+    state: StateType = {
         error: false,
         title: ""
     }
 
     onAddItemClick = () => {
-        let newTask = this.state.title;
+
+        let newText = this.state.title;
         this.setState({title: ""});
 
-        if (newTask === "") {
+        if (newText === "") {
             this.setState({error: true});
         } else {
             this.setState({error: false});
             // передаём новый текст наружу
-            this.props.addItem(newTask);
+            this.props.addItem(newText);
         }
     }
 
-    onTitleChanged = (e) => {
+    onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({
             error: false,
             title: e.currentTarget.value
         });
     }
 
-    onKeyPress = (e) => {
+    onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             this.onAddItemClick();
         }
